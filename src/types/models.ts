@@ -18,9 +18,10 @@ export interface Room {
 }
 
 export interface Booking {
-  Id: string;
+  id: number;
   roomId: number;
   userId: number;
+  userName: string;
   purpose: string;
   startTime: string;
   endTime: string;
