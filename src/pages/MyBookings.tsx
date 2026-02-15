@@ -18,6 +18,19 @@ export default function MyBookings() {
         .catch(err => console.error(err));
     }, []);
 
+  const getStatusText = (status: number) => {
+    switch (status) {
+      case 1:
+        return "Pending";
+      case 2:
+        return "Approved";
+      case 3:
+        return "Rejected";
+      default:
+        return "Unknown";
+    }
+  };
+
 
   return (
     <div>
@@ -40,7 +53,7 @@ export default function MyBookings() {
               <td>{b.purpose}</td>
               <td>{new Date(b.startTime).toLocaleString()}</td>
               <td>{new Date(b.endTime).toLocaleString()}</td>
-              <td>{b.status}</td>
+              <td>{getStatusText(b.status)}</td>
             </tr>
           ))}
         </tbody>

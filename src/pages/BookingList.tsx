@@ -35,12 +35,41 @@ export default function BookingList() {
     await api.delete(`/bookings/${id}`);
     loadData();
   };
+  
+  const getStatusText = (status: number) => {
+    switch (status) {
+      case 1:
+        return "Pending";
+      case 2:
+        return "Approved";
+      case 3:
+        return "Rejected";
+      default:
+        return "Unknown";
+    }
+  };
+
+  const [statusFilter, setStatusFilter] = useState<string>("");
+
 
   return (
     <div>
       <h1>
         {roomId ? `Bookings for Room ${roomId}` : "All Bookings"}
       </h1>
+
+      <div style={{ marginBottom: 16 }}>
+        <label>Status Filter: </label>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">All</option>
+          <option value="1">Pending</option>
+          <option value="2">Approved</option>
+          <option value="3">Rejected</option>
+        </select>
+      </div>
 
 
       <table border={1} cellPadding={8}>
@@ -62,14 +91,19 @@ export default function BookingList() {
         </thead>
 
         <tbody>
-          {bookings.map((b) => (
+          {bookings
+          .filter((b) => {
+            if (!statusFilter) return true;
+            return b.status === Number(statusFilter);
+          })
+          .map((b) => (
             <tr key={b.id}>
               <td>{b.id}</td>
               <td>{b.userId}</td>
               <td>{b.purpose}</td>
               <td>{new Date(b.startTime).toLocaleString()}</td>
               <td>{new Date(b.endTime).toLocaleString()}</td>
-              <td>{b.status}</td>
+              <td>{getStatusText(b.status)}</td>
 
               {role === "Admin" && (
                 <>

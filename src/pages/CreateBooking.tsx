@@ -9,6 +9,8 @@ export default function CreateBooking(){
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
     useEffect(() =>{
         api.get("/rooms").then(res => setRooms(res.data));
     }, []);
@@ -16,15 +18,19 @@ export default function CreateBooking(){
     const handleSubmit = async (e:React.FormEvent) => {
         e.preventDefault();
 
-        await api.post("/bookings", {
-            roomId,
-            userId: 1,
-            purpose,
-            startTime,
-            endTime
-        });
-    
-    alert("Booking berhasil");
+         try {
+            await api.post("/bookings", {
+                roomId,
+                userId: user.id,
+                purpose,
+                startTime,
+                endTime
+            });
+
+            alert("Booking berhasil");
+        } catch (error: any) {
+            alert(error.response?.data || "Booking gagal");
+        }
     };
 
     return (
@@ -33,7 +39,7 @@ export default function CreateBooking(){
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Room</label>
-                    <select onChange={e => setRoomId(Number(e.target.value))} required>
+                    <select value={roomId ?? ""}onChange={e => setRoomId(Number(e.target.value))} required>
                         <option value="">-- pilih room --</option>
                         {rooms.map(r => (
                             <option key={r.id} value={r.id}>

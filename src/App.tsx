@@ -9,6 +9,7 @@ import AdminRoute from "./components/AdminRoute";
 import { useNavigate } from "react-router-dom";
 import MyBookings from "./pages/MyBookings";
 
+
 function App() {
   const role = localStorage.getItem("role");
   const navigate = useNavigate();
